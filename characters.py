@@ -3,18 +3,23 @@ import pygame
 
 class Player(pygame.sprite.Sprite):
 
-    def __init__(self, spritesheet, x, y, scale, speed):
+    def __init__(self, filename, x, y, scale, speed):
         super().__init__()
         self.speed = speed
         self.direction = 'right'
-        self.flip = False
-        self.sprite = pygame.Surface((30, 40))
-        self.sprite.set_colorkey((0, 0, 0))
-        self.sprite.blit(spritesheet, (0, 0), (0, 0, 30, 40))
-        self.sprite = pygame.transform.scale(self.sprite, (int(self.sprite.get_width() * scale), int(self.sprite.get_height() * scale)))
-        self.rect = self.sprite.get_rect()
-        self.rect.center = (x, y)
+        self.flip = True
 
+        self.index = 0
+        self.animation_list = []
+
+        for i in range(3):
+            img = pygame.image.load(f'Assets/Sprites/{filename}{i}.png').convert()
+            img = pygame.transform.scale(img, (int(img.get_width() * scale), int(img.get_height() * scale)))
+            self.animation_list.append(img)
+
+        self.img = self.animation_list[0]
+        self.rect = self.img.get_rect()
+        self.rect.center = (x, y)
 
     def move(self, moving_left, moving_right):
 
@@ -26,7 +31,7 @@ class Player(pygame.sprite.Sprite):
             if self.direction == 'right':
                 self.flip = True
                 self.direction = 'left'
-        if moving_right:
+        elif moving_right:
             dx = self.speed
             if self.direction == 'left':
                 self.flip = True
@@ -35,8 +40,10 @@ class Player(pygame.sprite.Sprite):
         self.rect.x += dx
         self.rect.y += dy
 
+    def update_animation(self):
+        pass
 
     def draw(self, screen):
-        self.sprite = pygame.transform.flip(self.sprite, self.flip, False)
+        self.img = pygame.transform.flip(self.img, self.flip, False)
         self.flip = False
-        screen.blit(self.sprite, self.rect)
+        screen.blit(self.img, self.rect)

@@ -14,19 +14,17 @@ def start_game(screen_width):
     screen = pygame.display.set_mode((screen_width, screen_height))
     pygame.display.set_caption('Shooter')
 
-    spritesheet = pygame.image.load('D:/Pycharm Projects/venv/assets/img/character_sprite/global.png').convert()
-
     moving_left = False
     moving_right = False
 
     run = True
-    player = Player(spritesheet, 50, 50, 3, 5)
+    player = Player('ghost_char', 100, 100, 2, 5)
 
     while run:
 
         clock.tick(framerate)
 
-        screen.fill((123, 42, 50))
+        screen.fill((0, 0, 0))
 
         player.move(moving_left, moving_right)
         player.draw(screen)
@@ -39,14 +37,17 @@ def start_game(screen_width):
 
             # check for key press
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_a:
-                    moving_left = True
-                if event.key == pygame.K_d:
-                    moving_right = True
                 if event.key == pygame.K_ESCAPE:
                     run = False
+                    break
+                if event.key == pygame.K_a:
+                    moving_left = True
+                    moving_right = False
+                elif event.key == pygame.K_d:
+                    moving_right = True
+                    moving_left = False
 
-            # check for ky release
+            # check for key release
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_a:
                     moving_left = False
